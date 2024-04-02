@@ -1,0 +1,261 @@
+<div
+  class="card-body rounded"
+  style="height: fit-content; background-color: white"
+>
+  <span class="fs-5" style="font-size: large; margin-left: 20px"
+    >Detail Order</span
+  >
+  <div class="d-flex">
+    <div class="me-auto" style="margin-left: 20px" *ngIf="selectedCustomer">
+      <p class="text-primary fw-bold fs-3">{{ selectedCustomer.name }}</p>
+    </div>
+    <div class="me-auto" style="margin-left: 20px" *ngIf="!selectedCustomer">
+      <p class="text-primary fw-bold fs-3">Customer Name</p>
+    </div>
+    <div *ngIf="selectedCustomer">
+      <a
+        href="javascript: void(0);"
+        class="align-middle mr-2"
+        placement="left"
+        container="body"
+        ngbTooltip="Ubah"
+        style="margin-right: 20px"
+        (click)="updateCustomer(formCustomer)"
+      >
+        <em class="fa fa-edit fs-3"></em>
+      </a>
+    </div>
+  </div>
+  <div class="d-flex border-top">
+    <div
+      style="
+        margin-top: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 20px;
+      "
+    >
+      <span class="vertical-middle">Promo</span>
+    </div>
+    <div style="margin-top: 5px" class="d-flex" *ngIf="discount">
+      <div class="mb-2">
+        <div
+          class="container rounded align-items-center p-1"
+          style="
+            background-color: #f8f9fa;
+            width: fit;
+            min-width: 100px;
+            margin-right: 10px;
+            height: 80px;
+          "
+        >
+          <h3 class="text-primary text-center">
+            {{ discount.nominal_percentage }}%
+          </h3>
+          <p class="text-center">
+            <small>{{ discount.name }}</small>
+          </p>
+        </div>
+      </div>
+
+      <div class="d-flex" *ngIf="voucher">
+        <div class="mb-2">
+          <div
+            class="container rounded align-items-center p-1"
+            style="
+              background-color: #f8f9fa;
+              width: fit;
+              min-width: 100px;
+              margin: 0 10px;
+              height: 80px;
+            "
+          >
+            <h3 class="text-primary text-center">
+              Rp.{{ voucher.nominal_rupiah | number }}
+            </h3>
+            <p class="text-center">
+              <small>{{ voucher.promo_name }}</small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="container"
+    style="
+      border-top: 0.1px solid #e4e4e4;
+      border-bottom: 0.1px solid #e4e4e4;
+      min-height: 148px;
+    "
+  >
+    <br />
+    <div class="row">
+      <div class="col-md-12">
+        <div
+          class="product-container mb-3"
+          *ngFor="let p of product; index as i"
+        >
+          <div class="row">
+            <div class="col-md-3">
+              <div class="upload-image-container">
+                <div class="image-picker">
+                  <div class="image-ready center" *ngIf="p.photo_url">
+                    <img
+                      src="{{ p.photo_url }}"
+                      alt=""
+                      class="img-fluid"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mt-2">
+                <span class="fw-bold fs-4">{{ p.name }}</span
+                ><br />
+                <p class="text-primary fw-bold">
+                  Rp {{ p.price | number }}
+                </p>
+                <div *ngIf="p.details.length > 0">
+                  <div class="d-flex">
+                    <div *ngFor="let details of p.details; index as i">
+                      <em class="fa fa-sticky-note mt-1"></em> Catatan :
+                      {{ details.description }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 text-center" style="align-self: center">
+              <div style="margin-top: 20%; margin-top: -17px">
+                <button *ngIf="p.total_item <= 1" disabled
+                  class="btn btn-outline-secondary"
+                  style="--bs-btn-padding-x: 0rem; --bs-btn-padding-y: 0rem"
+                  (click)="minAmount(p, i)"
+                >
+                  <!-- <b>-</b> -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-dash-lg"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"
+                    />
+                  </svg>
+                </button>
+                <button *ngIf="p.total_item>1"
+                  class="btn btn-outline-secondary"
+                  style="--bs-btn-padding-x: 0rem; --bs-btn-padding-y: 0rem"
+                  (click)="minAmount(p, i)"
+                >
+                  <!-- <b>-</b> -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-dash-lg"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"
+                    />
+                  </svg>
+                </button>
+                <b>&nbsp;&nbsp; {{ p.total_item }} &nbsp;&nbsp;</b>
+                <button
+                  class="btn btn-primary"
+                  style="--bs-btn-padding-x: 0rem; --bs-btn-padding-y: 0rem"
+                  (click)="addAmount(p, i)"
+                >
+                  <!-- <b>+</b> -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-plus-lg"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div style="margin:0 20px;" *ngIf="selectedCustomer">
+    <p class="fs-4 fw-bold">Detail Pembayaran</p>
+    <div class="d-flex justify-content-between mb-2">
+      <div>Subtotal</div>
+      <div>Rp {{subtotal(product) | number}}</div>
+    </div>
+    <div class="d-flex justify-content-between mb-2">
+      <div>Tax 11%</div>
+      <div>Rp{{tax(product) | number}}</div>
+    </div>
+    <div class="d-flex justify-content-between mb-2">
+      <div>Diskon {{ discount.nominal_percentage }}%</div>
+      <div>{{ discount.nominal_percentage }}% {{ discount.promo_name }}</div>
+    </div>
+    <div class="d-flex justify-content-between mb-2">
+      <div>
+        Voucher
+        <p class="fs-6 text-end">{{ voucher.promo_name }}</p>
+      </div>
+      <div>-Rp {{ voucher.nominal_rupiah | number }}</div>
+    </div>
+  
+    <hr />
+    <div
+      class="d-flex justify-content-between"
+      style="border-top: 0.1px dashed #e4e4e4; margin-top: -40px"
+    >
+      <div style="margin-top: 5px">
+        <b style="color: black; font-size: 15px">Total Pembayaran</b>
+      </div>
+      <div style="margin-top: 5px">
+        <b style="color: black; font-size: 15px">
+          <p style="float: right">Rp.{{total(product) | number}}</p>
+        </b>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <button (click)="insert()" class="btn btn-primary" style="width: 100%; margin-top: -12px">
+            <b>+ Tambah Pesanan</b>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <ng-template #formCustomer let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title mt-0">{{ titleModal }}</h5>
+        <button type="button" class="close" (click)="modal.close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-form-customer [CustomerId]="customerId" (afterSave)="modal.close();"></app-form-customer>
+    </div>
+</ng-template>

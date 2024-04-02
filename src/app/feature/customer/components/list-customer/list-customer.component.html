@@ -1,0 +1,118 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-transparent">
+        <div class="card-header d-flex justify-content-between">
+          <h1>Daftar Customer</h1>
+          <div class="d-flex justify-content-end">
+            <form class="form-inline">
+              <div class="form-group">
+                <label class="mr-2">Nama</label>
+                <div class="input-group input-group-sm mr-2">
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    [(ngModel)]="filter.name"
+                    name="name"
+                  />
+                  <div class="input-group-append" (click)="reloadDataTable()">
+                    <span class="input-group-text">
+                      <em class="fa fa-search"></em>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="form-group">
+              <div class="input-group mr-2">
+                  <ng-select name="type" appendTo="body" [(ngModel)]="filter.is_verifyed"
+                      placeholder="Status" [searchable]="false" (change)="reloadDataTable()">
+                      <ng-option [value]="'1'">sudah diverifikasi</ng-option>
+                      <ng-option [value]="'0'">belum diverifikasi</ng-option>
+                  </ng-select>
+              </div>
+          </div>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary mr-2"
+              (click)="createCustomer(formCustomer)"
+            >
+              <em class="fa fa-plus font-size-14 align-middle mr-1"></em>
+              Tambah Customer
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <table class="table table-hover" datatable [dtOptions]="dtOptions">
+            <thead class="thead-light">
+              <tr>
+                <th>No</th>
+                <th>Photo</th>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let Customer of listCustomer">
+                <td>{{ Customer.no }}</td>
+                <td class="vertical-middle">
+                  <img class="img-product" src="{{Customer.photo_url}}" alt="" />
+              </td>
+                <td class="vertical-middle">{{ Customer.name }}</td>
+                <td class="vertical-middle">{{ Customer.email }}</td>
+                <td class="vertical-middle">
+                  <label class="badge badge-success" *ngIf="Customer.is_verifyed== 1">sudah terverifikasi</label>
+                  <label class="badge badge-danger" *ngIf="Customer.is_verifyed== 0">Belum terverifikasi</label>
+              </td>
+                <td class="vertical-middle text-right">
+                  <a
+                    href="javascript: void(0);"
+                    class="align-middle mr-2"
+                    (click)="updateCustomer(formCustomer, Customer)"
+                    placement="left"
+                    container="body"
+                    ngbTooltip="Ubah"
+                  >
+                    <em class="fa fa-edit font-size-14 p-1"></em>
+                  </a>
+                  <a
+                    href="javascript: void(0);"
+                    class="align-middle"
+                    (click)="deleteCustomer(Customer.id)"
+                    placement="left"
+                    container="body"
+                    ngbTooltip="Hapus"
+                  >
+                    <em class="fa fa-trash font-size-14 p-1"></em>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #formCustomer let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title mt-0">{{ titleModal }}</h5>
+    <button
+      type="button"
+      class="close"
+      (click)="modal.close()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-form-customer
+      [CustomerId]="CustomerId"
+      (afterSave)="modal.close(); getCustomer()"
+    ></app-form-customer>
+  </div>
+</ng-template>

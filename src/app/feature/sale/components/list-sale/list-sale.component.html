@@ -1,0 +1,77 @@
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card card-transparent">
+          <div class="card-header d-flex justify-content-between">
+            <div class="form-inline d-flex align-items-center">
+              <div class="form-group flex-grow-1 mb-0 me-2">
+                <div class="input-group">
+                  <ng-select
+                  [items]="listCustomers"
+                  style="height: fit-content"
+                  bindLabel="name"
+                  bindValue="id"
+                  placeholder="Pilih Customer"
+                  [loading]="showLoading"
+                  [searchable]="false"
+                  [(ngModel)] = "selectedCustomer"
+                  name="customer_id"
+                  style="width: 200px"
+                  (change)="onCustomerSelectionChange($event)"
+                  >
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-3" *ngFor="let product of listProducts">
+                <div class="container-fluid text-center p-2 rounded" style="overflow: hidden; background-color: #f9f9f9; height: 190px; position: relative;">
+                  <div class="button-select">
+                    <div style="height:190px ; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                      <button *ngIf="product.selected == false" (click)="selectProduct(product)" style="width: 100px; margin-bottom: 20px;" class="btn btn-sm btn-success">add item</button>
+                      <button *ngIf="product.selected == true" disabled (click)="selectProduct(product)" style="width: 100px; margin-bottom: 20px;" class="btn btn-sm btn-success">add item</button>
+                      <button *ngIf="product.selected == true" (click)="unselectProduct(product)" style="width: 100px; margin-bottom: 20px;" class="btn btn-sm btn-danger">remove item</button>
+                      <button *ngIf="product.selected == false" disabled (click)="unselectProduct(product)" style="width: 100px; margin-bottom: 20px;" class="btn btn-sm btn-danger">remove item</button>
+                    </div>
+                  </div>
+                  <p class="" style="text-align: right; margin-bottom: 0;">
+                    <a
+                    href="javascript: void(0);"
+                    placement="right"
+                    container="body"
+                    ngbTooltip="Ubah"
+                    style="position: relative;"
+                    (click)="updateProduct(formProduct, product)"
+                  >
+                    <em class="fa fa-edit font-size-14"></em>
+                  </a>
+                  </p>
+                  <img src="{{product.photo_url}}" class="rounded" style="width: 100px;" alt="">
+                  <p class="mt-2 mb-1">{{product.name}}</p>
+                  <p class="text-primary fw-bold" style="margin-top: 0;">{{product.price | number}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <app-form-sale [discount]="discount" [product]="selectedProduct" [voucher]="voucher" [selectedCustomer]="customerdata"></app-form-sale>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #formProduct let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title mt-0">{{ titleModal }}</h5>
+        <button type="button" class="close" (click)="modal.close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-form-product [productId]="productId" (afterSave)="modal.close(); getProducts()"></app-form-product>
+    </div>
+</ng-template>
+  

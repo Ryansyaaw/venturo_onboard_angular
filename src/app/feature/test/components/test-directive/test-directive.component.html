@@ -1,0 +1,12 @@
+<p>test-directive works!</p>
+<div>
+    <label for="search-bar"></label>
+    <input type="text" [(ngModel)]="SearchText">
+</div>
+<div>
+    <p *ngIf="SearchText != ''"><strong>Search result for : </strong> {{SearchText}}</p>
+</div>
+<div *ngFor="let user of users">
+    <p>{{user.Name}}</p>
+    <p>{{user.Age}}</p>
+</div>

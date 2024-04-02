@@ -1,0 +1,16 @@
+.card-body .row .col-3 .container-fluid {
+    position: relative;
+  }
+  
+  .card-body .row .col-3 .container-fluid .button-select {
+    background-color: #f9f9f9;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: -1000px; /* Atur initial position */
+    transition: top 0.5s; /* Tambahkan transisi untuk efek animasi */
+  }
+  
+  .card-body .row .col-3 .container-fluid:hover .button-select {
+    top: 0; /* Atur position saat dihover */
+  }
